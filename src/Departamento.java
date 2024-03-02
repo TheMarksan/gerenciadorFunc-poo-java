@@ -13,7 +13,6 @@ public class Departamento {
         departamentos.add(new Departamento("Marketing"));
         departamentos.add(new Departamento("RH"));
         departamentos.add(new Departamento("Gerência"));
-        departamentos.add(new Departamento("Estagiário"));
         departamentos.add(new Departamento("Serviços Gerais"));
     }
 
