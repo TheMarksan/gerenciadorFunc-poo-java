@@ -117,12 +117,13 @@ public class Main {
                     for (int j = 0; j < funcionarios.size(); j++) {
                         Funcionario funcionario = funcionarios.get(j);
                         if(funcionario.getDep().getNome().equals(departamento.getNome())){
-                            System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                            System.out.println((j + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
                             achou = true;
                         }
                     }
                     if(!achou){
                         System.out.println("- Nenhum funcionário alocado no departamento");
+                        achou = false;
                     }
                 }
 
@@ -185,18 +186,20 @@ public class Main {
             for (int j = 0; j < funcionarios.size(); j++) {
                 Funcionario funcionario = funcionarios.get(j);
                 if(funcionario.getDep().getNome().equals(departamento.getNome())){
-                    System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                    System.out.println((j + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
                     achou = true;
                 }
             }
             if(!achou){
                 System.out.println("- Nenhum funcionário alocado no departamento");
+                achou = false;
             }
+
         }
 
         System.out.println("Digite o número da matrícula:");
         int nMatricula = scanner.nextInt();
-        boolean achou = true;
+        boolean achou = false;
         String matriculaString = Integer.toString(nMatricula);
         while(matriculaString.length()!=6){
             System.out.println("Valor inválido, a matrícula possui 6 caracteres. Tente novamente: ");
@@ -206,11 +209,11 @@ public class Main {
         for (int i = 0; i < funcionarios.size(); i++) {
             Funcionario funcionario = funcionarios.get(i);
             if (funcionario.getMatricula()==nMatricula) {
+                funcionario.getDep().incrementFolha(funcionario.showSalario()*(-1));
                 funcionarios.remove(i);
                 System.out.println("Demitido >por justa causa< com sucesso!");
                 System.out.println();
-            }else{
-                achou = false;
+                achou = true;
             }
         }
 
