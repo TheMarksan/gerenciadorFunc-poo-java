@@ -32,10 +32,10 @@ public class Main {
                     consultarFuncionarios();
                     break;
                 case 3:
-                    // método
+                    demitirFuncionário();
                     break;
                 case 4:
-                    // método
+                    consultarSalarios();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -78,6 +78,10 @@ public class Main {
         }
         System.out.print("Digite o salário do Funcionário: ");
         double salario = scanner.nextDouble();
+        while(salario<1412){
+            System.out.println("Você está praticando a mais-valia e descumprindo as leis trabalhistas. Digite um valor igual ou superior ao salário mínimo atual:");
+            salario = scanner.nextDouble();
+        }
         System.out.print("Gerando nova matrícula...\n");
         int matricula = gerarMatricula(funcionarios);
         System.out.println("O número de matrícula do funcionário " + name + " é " + matricula);
@@ -90,6 +94,7 @@ public class Main {
         Departamento departamento = Departamento.getDep(index);
 
         Funcionario funcionario = new Funcionario(name, cpf, salario, matricula, departamento);
+        funcionario.getDep().incrementFolha(salario);
         funcionarios.add(funcionario);
         System.out.println("\nFuncionário(a) adicionado no sistema!");
     }
@@ -102,19 +107,29 @@ public class Main {
         int opcao = scanner.nextInt();
         switch (opcao) {
             case 1:
-                if (funcionarios.isEmpty()) {
-                    System.out.println("Pague seu DAS MEI.\n");
-                } else {
-                    System.out.println("\n===== Funcionários da Empresa Não sei o que =====");
-                    for (int i = 0; i < funcionarios.size(); i++) {
-                        Funcionario funcionario = funcionarios.get(i);
-                        System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - Departamento: " + funcionario.getDep().getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                System.out.println("\n===== Funcionários da Empresa Não sei o que =====");
+                System.out.println();
+                for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                    Departamento departamento = Departamento.getDep(i);
+                    System.out.println("\n----- Departamento de "+departamento.getNome()+" -----");
+                    System.out.println();
+                    boolean achou = false;
+                    for (int j = 0; j < funcionarios.size(); j++) {
+                        Funcionario funcionario = funcionarios.get(j);
+                        if(funcionario.getDep().getNome().equals(departamento.getNome())){
+                            System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                            achou = true;
+                        }
+                    }
+                    if(!achou){
+                        System.out.println("- Nenhum funcionário alocado no departamento");
                     }
                 }
+
                 break;
             case 2:
                 if (funcionarios.isEmpty()) {
-                    System.out.println("Sua empresa está falida.\n");
+                    System.out.println("Pague seu DAS MEI.\n");
                 } else {
                     System.out.println("Filtrar por qual departamento?");
                     for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
@@ -158,6 +173,64 @@ public class Main {
             default:
                 System.out.println("Opção inválida!");
         }
+    }
+
+    private static void demitirFuncionário() {
+        //scanner.nextLine();
+        for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+            Departamento departamento = Departamento.getDep(i);
+            System.out.println("\n----- Departamento de "+departamento.getNome()+" -----");
+            System.out.println();
+            boolean achou = false;
+            for (int j = 0; j < funcionarios.size(); j++) {
+                Funcionario funcionario = funcionarios.get(j);
+                if(funcionario.getDep().getNome().equals(departamento.getNome())){
+                    System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                    achou = true;
+                }
+            }
+            if(!achou){
+                System.out.println("- Nenhum funcionário alocado no departamento");
+            }
+        }
+
+        System.out.println("Digite o número da matrícula:");
+        int nMatricula = scanner.nextInt();
+        boolean achou = true;
+        String matriculaString = Integer.toString(nMatricula);
+        while(matriculaString.length()!=6){
+            System.out.println("Valor inválido, a matrícula possui 6 caracteres. Tente novamente: ");
+            nMatricula = scanner.nextInt();
+            matriculaString = Integer.toString(nMatricula);
+        }
+        for (int i = 0; i < funcionarios.size(); i++) {
+            Funcionario funcionario = funcionarios.get(i);
+            if (funcionario.getMatricula()==nMatricula) {
+                funcionarios.remove(i);
+                System.out.println("Demitido >por justa causa< com sucesso!");
+                System.out.println();
+            }else{
+                achou = false;
+            }
+        }
+
+        if(!achou){
+            System.out.println("Não existe funcionário com essa matrícula.");
+        }
+
+
+    }
+    private static void consultarSalarios() {
+        //scanner.nextLine();
+        System.out.println("Folha de qual departamento?");
+        for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+            System.out.println(i + ". " + Departamento.getDepartamentos().get(i).getNome());
+        }
+        int index = scanner.nextInt();
+        Departamento departamento = Departamento.getDep(index);
+        System.out.println("\n===== Folha salarial mensal do departamento de " + departamento.getNome() + " =====");
+        System.out.println("Total: R$ "+departamento.getFolhaSalarial());
+        System.out.println();
     }
     public static boolean validarCPF(String cpf) {
         String regex = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}";
