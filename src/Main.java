@@ -103,7 +103,7 @@ public class Main {
         switch (opcao) {
             case 1:
                 if (funcionarios.isEmpty()) {
-                    System.out.println("Sua empresa está falida.\n");
+                    System.out.println("Pague seu DAS MEI.\n");
                 } else {
                     System.out.println("\n===== Funcionários da Empresa Não sei o que =====");
                     for (int i = 0; i < funcionarios.size(); i++) {
