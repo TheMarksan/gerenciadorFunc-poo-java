@@ -20,6 +20,7 @@ public class Main {
             System.out.println("2. Consultar Funcionário");
             System.out.println("3. Demitir Funcionário");
             System.out.println("4. Consultar Salários");
+            System.out.println("5. Editar");
             System.out.println("0. Sair");
             System.out.print("Escolha uma opção: ");
             opcao = scanner.nextInt();
@@ -36,6 +37,9 @@ public class Main {
                     break;
                 case 4:
                     consultarSalarios();
+                    break;
+                case 5:
+                    editarFuncionario();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -298,6 +302,104 @@ public class Main {
                 System.out.println("Opção inválida!");
         }
         System.out.println();
+    }
+
+    private static void editarFuncionario() {
+        System.out.println("Escolha o funcionário que deseja editar:");
+        for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+            int index=1;
+            Departamento departamento = Departamento.getDep(i);
+            System.out.println("\n----- Departamento de "+departamento.getNome()+" -----");
+            System.out.println();
+            boolean achou = false;
+            for (int j = 0; j < funcionarios.size(); j++) {
+                Funcionario funcionario = funcionarios.get(j);
+                if(funcionario.getDep().getNome().equals(departamento.getNome())){
+                    System.out.println((index) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + String.format("%.2f", funcionario.showSalario()) + "\n");
+                    achou = true;
+                    index++;
+                }
+            }
+            if(!achou){
+                System.out.println("- Nenhum funcionário alocado no departamento");
+                achou = false;
+            }
+
+        }
+
+        System.out.print("Digite o número da matrícula do funcionário que deseja editar: ");
+        int matricula = scanner.nextInt();
+
+        boolean encontrado = false;
+        for (Funcionario funcionario : funcionarios) {
+            if (funcionario.getMatricula() == matricula) {
+                encontrado = true;
+                System.out.println("O que deseja editar para o funcionário " + funcionario.getNome() + "?");
+                System.out.println("1. Nome");
+                System.out.println("2. CPF");
+                System.out.println("3. Salário");
+                System.out.println("4. Departamento");
+
+                int escolha = scanner.nextInt();
+                scanner.nextLine(); // Limpar o buffer
+
+                switch (escolha) {
+                    case 1:
+                        System.out.print("Novo nome: ");
+                        String novoNome = scanner.nextLine();
+                        funcionario.setNome(novoNome);
+                        System.out.println("Nome atualizado com sucesso!");
+                        break;
+                    case 2:
+                        System.out.print("Novo CPF: ");
+                        String novoCpf = scanner.nextLine();
+                        while (!validarCPF(novoCpf) || cpfJaCadastrado(novoCpf)) {
+                            if (!validarCPF(novoCpf)) {
+                                System.out.println("Formato de CPF inválido. Tente novamente no formato válido (xxx.xxx.xxx-xx):");
+                            } else {
+                                System.out.println("Esse CPF já está cadastrado. Tente novamente:");
+                            }
+                            novoCpf = scanner.nextLine();
+                        }
+                        funcionario.setCPF(novoCpf);
+                        System.out.println("CPF atualizado com sucesso!");
+                        break;
+                    case 3:
+                        System.out.print("Novo salário: ");
+                        double novoSalario = scanner.nextDouble();
+                        while (novoSalario < 1412) {
+                            System.out.println("Você está praticando a mais-valia e descumprindo as leis trabalhistas. Digite um valor igual ou superior ao salário mínimo atual:");
+                            novoSalario = scanner.nextDouble();
+                        }
+                        funcionario.setSalario(novoSalario);
+                        System.out.println("Salário atualizado com sucesso!");
+                        break;
+                    case 4:
+                        System.out.println("Escolha o novo departamento para o funcionário:");
+                        for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                            System.out.println(i + ". " + Departamento.getDepartamentos().get(i).getNome());
+                        }
+                        System.out.print("Digite o número do departamento: ");
+                        int novoDepartamentoIndex = scanner.nextInt();
+                        if (novoDepartamentoIndex >= 0 && novoDepartamentoIndex < Departamento.getDepartamentos().size()) {
+                            Departamento novoDepartamento = Departamento.getDep(novoDepartamentoIndex);
+                            funcionario.setDep(novoDepartamento);
+                            System.out.println("Departamento atualizado com sucesso!");
+                        } else {
+                            System.out.println("Número de departamento inválido!");
+                        }
+                        break;
+                    default:
+                        System.out.println("Opção inválida!");
+                        break;
+                }
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Funcionário com a matrícula " + matricula + " não encontrado.");
+        }
     }
 
     public static boolean validarCPF(String cpf) {

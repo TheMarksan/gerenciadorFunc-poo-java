@@ -27,7 +27,22 @@ public class Funcionario {
         return this.salario;
     }
 
+    public String setNome(String newName) {
+        return nome = newName;
+    }
+    public String setCPF(String newCPF) {
+        return cpf = newCPF;
+    }
+
+    public double setSalario(double newSalario){
+        return salario = newSalario;
+    }
+
     public Departamento getDep(){
         return this.dep;
+    }
+
+    public Departamento setDep(Departamento newDep){
+        return dep = newDep;
     }
 }
