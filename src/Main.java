@@ -371,7 +371,10 @@ public class Main {
                             System.out.println("Você está praticando a mais-valia e descumprindo as leis trabalhistas. Digite um valor igual ou superior ao salário mínimo atual:");
                             novoSalario = scanner.nextDouble();
                         }
+                        double oldSalario = funcionario.showSalario();
+                        funcionario.getDep().incrementFolha(oldSalario*(-1));
                         funcionario.setSalario(novoSalario);
+                        funcionario.getDep().incrementFolha(novoSalario);
                         System.out.println("Salário atualizado com sucesso!");
                         break;
                     case 4:
@@ -381,9 +384,11 @@ public class Main {
                         }
                         System.out.print("Digite o número do departamento: ");
                         int novoDepartamentoIndex = scanner.nextInt();
+                        funcionario.getDep().alocar(-1);
                         if (novoDepartamentoIndex >= 0 && novoDepartamentoIndex < Departamento.getDepartamentos().size()) {
                             Departamento novoDepartamento = Departamento.getDep(novoDepartamentoIndex);
                             funcionario.setDep(novoDepartamento);
+                            funcionario.getDep().alocar(1);
                             System.out.println("Departamento atualizado com sucesso!");
                         } else {
                             System.out.println("Número de departamento inválido!");
