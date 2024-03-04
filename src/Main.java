@@ -74,7 +74,7 @@ public class Main {
         String cpf = scanner.nextLine();
         while (!validarCPF(cpf) || cpfJaCadastrado(cpf)) {
             if (!validarCPF(cpf)) {
-                System.out.println("Formato de CPF inválido. Tente novamente:");
+                System.out.println("Formato de CPF inválido. Tente novamente no formato válido (xxx.xxx.xxx-xx):");
             } else {
                 System.out.println("Esse CPF já está cadastrado. Tente novamente:");
             }
