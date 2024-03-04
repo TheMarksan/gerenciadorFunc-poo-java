@@ -3,14 +3,14 @@
 class Main {
     - funcionarios: ArrayList<Funcionario>
     - scanner: Scanner
-
-    + main(String[]): void
-    + gerarMatricula(ArrayList<Funcionario>): int
-    + addFuncionario(): void
-    + consultarFuncionarios(): void
-    + demitirFuncionário(): void
-    + consultarSalarios(): void
-    + validarCPF(String): boolean
+    + main(String[] args)
+    + gerarMatricula(ArrayList<Funcionario> funcionarios)
+    + addFuncionario()
+    + consultarFuncionarios()
+    + demitirFuncionario()
+    + consultarSalarios()
+    + validarCPF(String cpf)
+    + cpfJaCadastrado(String cpf)
 }
 
 class Funcionario {
@@ -19,8 +19,7 @@ class Funcionario {
     - salario: double
     - matricula: int
     - dep: Departamento
-
-    + Funcionario(nome: String, cpf: String, salario: double, matricula: int, dep: Departamento)
+    + Funcionario(String nome, String cpf, double salario, int matricula, Departamento dep)
     + getNome(): String
     + getCPF(): String
     + getMatricula(): int
@@ -30,15 +29,19 @@ class Funcionario {
 
 class Departamento {
     - nome: String
-    - funcionarios: ArrayList<Funcionario>
-
-    + Departamento(nome: String)
-    + inicializarDepartamentos(): void
+    - folhaSalarial: double
+    - alocados: int
+    - departamentos: ArrayList<Departamento>
+    + Departamento(String nome, double folhaSalarial, int alocados)
+    + inicializarDepartamentos()
+    + getDepartamentos(): ArrayList<Departamento>
     + getNome(): String
-    + incrementFolha(salario: double): void
+    + incrementFolha(double salario): double
     + getFolhaSalarial(): double
-    + addFuncionario(funcionario: Funcionario): void
-    + removeFuncionario(matricula: int): void
+    + alocar(int count): int
+    + getAlocados(): int
+    + getMediaSalarial(): double
+    + getDep(int indice): Departamento
 }
 
 Main --> Funcionario: contém
