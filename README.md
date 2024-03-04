@@ -7,7 +7,7 @@
 ## Equipe
 <ul>
   <li>Marcos Melo</li>
-  <li>Gustavo</li>
+  <li>Gustavo Galvão</li>
 </ul>
 
 ## Professor
