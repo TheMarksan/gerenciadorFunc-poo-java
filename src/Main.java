@@ -287,6 +287,12 @@ public class Main {
                 System.out.println("Total: R$ " + String.format("%.2f", departamento.getFolhaSalarial()));
                 System.out.println("Funcionários alocados: " + departamento.getAlocados());
                 System.out.println("Média salarial do departamento: R$ " + String.format("%.2f", departamento.getMediaSalarial()));
+                double folhaTotalEmpresa = 0;
+                for (Departamento dept : Departamento.getDepartamentos()) {
+                    folhaTotalEmpresa += dept.getFolhaSalarial();
+                }
+                double percentual = (departamento.getFolhaSalarial() / folhaTotalEmpresa) * 100;
+                System.out.println("Este departamento representa " + String.format("%.2f", percentual) + "% da folha salarial total da empresa.");
                 break;
             default:
                 System.out.println("Opção inválida!");
