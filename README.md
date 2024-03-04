@@ -12,5 +12,5 @@
 
 ## Professor
 <ul>
-  <li>Ulipo Netto</li>
+  <li>Ulpio Netto</li>
 </ul>
