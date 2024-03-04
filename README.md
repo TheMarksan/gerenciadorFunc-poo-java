@@ -1,4 +1,4 @@
-# toDoList-poo-java
+# Sistema de Gerenciamento de Funcionários
 <p>Projeto 2 do curso de Programação Orientada a Objetos do OxeTech Lab</p>
 
 <h2><strong>Diagrama UML: </strong></h2>
