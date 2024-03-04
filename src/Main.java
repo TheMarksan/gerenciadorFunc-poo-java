@@ -72,8 +72,12 @@ public class Main {
         String name = scanner.nextLine();
         System.out.print("Digite o CPF do Funcionário: ");
         String cpf = scanner.nextLine();
-        while(!validarCPF(cpf)){
-            System.out.println("Formato de CPF inválido. Tente novamente:");
+        while (!validarCPF(cpf) || cpfJaCadastrado(cpf)) {
+            if (!validarCPF(cpf)) {
+                System.out.println("Formato de CPF inválido. Tente novamente:");
+            } else {
+                System.out.println("Esse CPF já está cadastrado. Tente novamente:");
+            }
             cpf = scanner.nextLine();
         }
         System.out.print("Digite o salário do Funcionário: ");
@@ -95,6 +99,7 @@ public class Main {
 
         Funcionario funcionario = new Funcionario(name, cpf, salario, matricula, departamento);
         funcionario.getDep().incrementFolha(salario);
+        funcionario.getDep().alocar(1);
         funcionarios.add(funcionario);
         System.out.println("\nFuncionário(a) adicionado no sistema!");
     }
@@ -110,6 +115,7 @@ public class Main {
                 System.out.println("\n===== Funcionários da Empresa Não sei o que =====");
                 System.out.println();
                 for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                    int index=1;
                     Departamento departamento = Departamento.getDep(i);
                     System.out.println("\n----- Departamento de "+departamento.getNome()+" -----");
                     System.out.println();
@@ -117,7 +123,8 @@ public class Main {
                     for (int j = 0; j < funcionarios.size(); j++) {
                         Funcionario funcionario = funcionarios.get(j);
                         if(funcionario.getDep().getNome().equals(departamento.getNome())){
-                            System.out.println((j + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                            System.out.println((index) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + String.format("%.2f", funcionario.showSalario())  + "\n");
+                            index++;
                             achou = true;
                         }
                     }
@@ -142,7 +149,7 @@ public class Main {
                     for (int i = 0; i < funcionarios.size(); i++) {
                         Funcionario funcionario = funcionarios.get(i);
                         if (funcionario.getDep().getNome().equals(departamento.getNome())) {
-                            System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - Departamento: " + funcionario.getDep().getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                            System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - Departamento: " + funcionario.getDep().getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + String.format("%.2f", funcionario.showSalario()) + "\n");
                         }
                     }
                 }
@@ -160,7 +167,7 @@ public class Main {
                 for (int i = 0; i < funcionarios.size(); i++) {
                     Funcionario funcionario = funcionarios.get(i);
                     if (funcionario.getMatricula()==nMatricula) {
-                        System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - Departamento: " + funcionario.getDep().getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                        System.out.println((i + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - Departamento: " + funcionario.getDep().getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Salário: R$ " + String.format("%.2f", funcionario.showSalario()) + "\n");
                     }else{
                         achou = false;
                     }
@@ -179,6 +186,7 @@ public class Main {
     private static void demitirFuncionário() {
         //scanner.nextLine();
         for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+            int index=1;
             Departamento departamento = Departamento.getDep(i);
             System.out.println("\n----- Departamento de "+departamento.getNome()+" -----");
             System.out.println();
@@ -186,8 +194,9 @@ public class Main {
             for (int j = 0; j < funcionarios.size(); j++) {
                 Funcionario funcionario = funcionarios.get(j);
                 if(funcionario.getDep().getNome().equals(departamento.getNome())){
-                    System.out.println((j + 1) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + funcionario.showSalario() + "\n");
+                    System.out.println((index) + ". " + "Nome: " + funcionario.getNome() + "\n - CPF: " + funcionario.getCPF() + "\n - Matrícula: " + funcionario.getMatricula() + "\n - Salário: R$ " + String.format("%.2f", funcionario.showSalario()) + "\n");
                     achou = true;
+                    index++;
                 }
             }
             if(!achou){
@@ -210,6 +219,7 @@ public class Main {
             Funcionario funcionario = funcionarios.get(i);
             if (funcionario.getMatricula()==nMatricula) {
                 funcionario.getDep().incrementFolha(funcionario.showSalario()*(-1));
+                funcionario.getDep().alocar(-1);
                 funcionarios.remove(i);
                 System.out.println("Demitido >por justa causa< com sucesso!");
                 System.out.println();
@@ -225,19 +235,77 @@ public class Main {
     }
     private static void consultarSalarios() {
         //scanner.nextLine();
-        System.out.println("Folha de qual departamento?");
-        for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
-            System.out.println(i + ". " + Departamento.getDepartamentos().get(i).getNome());
+        System.out.println("1. Folha salarial da Empresa Não sei o que");
+        System.out.println("2. Folha salarial por departamento");
+        int opcao = scanner.nextInt();
+        switch (opcao) {
+            case 1:
+                double folhaTotal = 0;
+                int funcsTotal = 0;
+                double mediaSalarial = 0;
+                System.out.println("\n===== Folha salarial mensal da Empresa Não sei o que =====");
+                for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                    folhaTotal += Departamento.getDepartamentos().get(i).getFolhaSalarial();
+                    funcsTotal += Departamento.getDepartamentos().get(i).getAlocados();
+                }
+                System.out.println("Total: R$ " + String.format("%.2f", folhaTotal));
+                System.out.println("Funcionários totais: " + funcsTotal);
+                int maior = Departamento.getDepartamentos().get(0).getAlocados();
+                double maiorFolha = Departamento.getDepartamentos().get(0).getFolhaSalarial();
+                int maiorIndex = 0, maiorFolhaIndex = 0;
+                for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                    if (Departamento.getDepartamentos().get(i).getAlocados() > maior) {
+                        maior = Departamento.getDepartamentos().get(i).getAlocados();
+                        maiorIndex = i;
+                    }
+                    if (Departamento.getDepartamentos().get(i).getFolhaSalarial() > maiorFolha) {
+                        maiorFolha = Departamento.getDepartamentos().get(i).getAlocados();
+                        maiorFolhaIndex = i;
+                    }
+                }
+                if (funcionarios.isEmpty()) {
+                    System.out.println("Não há funcionários alocados em nenhum departamento.");
+                } else {
+                    System.out.println("Departamento com mais funcionários alocados: " + Departamento.getDepartamentos().get(maiorIndex).getNome() + " - " + Departamento.getDepartamentos().get(maiorIndex).getAlocados() + " funcionário(s).");
+                    System.out.println("Departamento com maior folha salarial: "+Departamento.getDepartamentos().get(maiorFolhaIndex).getNome() + " - R$ " + String.format("%.2f", Departamento.getDepartamentos().get(maiorFolhaIndex).getFolhaSalarial()));
+                    double porcentagem = (Departamento.getDepartamentos().get(maiorFolhaIndex).getFolhaSalarial() / folhaTotal) * 100;
+                    System.out.println("Essa folha representa " + String.format("%.2f", porcentagem) + "% da folha salarial total da empresa.");
+                }
+                if (funcsTotal != 0) {
+                    mediaSalarial = folhaTotal / funcsTotal;
+                }
+                System.out.println("Média salarial da empresa: R$ " + String.format("%.2f", mediaSalarial));
+                break;
+            case 2:
+                System.out.println("Folha de qual departamento?");
+                for (int i = 0; i < Departamento.getDepartamentos().size(); i++) {
+                    System.out.println(i + ". " + Departamento.getDepartamentos().get(i).getNome());
+                }
+                int index = scanner.nextInt();
+                Departamento departamento = Departamento.getDep(index);
+                System.out.println("\n===== Folha salarial mensal do departamento de " + departamento.getNome() + " =====");
+                System.out.println("Total: R$ " + String.format("%.2f", departamento.getFolhaSalarial()));
+                System.out.println("Funcionários alocados: " + departamento.getAlocados());
+                System.out.println("Média salarial do departamento: R$ " + String.format("%.2f", departamento.getMediaSalarial()));
+                break;
+            default:
+                System.out.println("Opção inválida!");
         }
-        int index = scanner.nextInt();
-        Departamento departamento = Departamento.getDep(index);
-        System.out.println("\n===== Folha salarial mensal do departamento de " + departamento.getNome() + " =====");
-        System.out.println("Total: R$ "+departamento.getFolhaSalarial());
         System.out.println();
     }
+
     public static boolean validarCPF(String cpf) {
         String regex = "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}";
 
         return cpf.matches(regex);
+    }
+
+    private static boolean cpfJaCadastrado(String cpf) {
+        for (Funcionario funcionario : funcionarios) {
+            if (funcionario.getCPF().equals(cpf)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

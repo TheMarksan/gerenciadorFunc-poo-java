@@ -1,0 +1,48 @@
+@startuml
+
+class Main {
+    - funcionarios: ArrayList<Funcionario>
+    - scanner: Scanner
+
+    + main(String[]): void
+    + gerarMatricula(ArrayList<Funcionario>): int
+    + addFuncionario(): void
+    + consultarFuncionarios(): void
+    + demitirFuncionário(): void
+    + consultarSalarios(): void
+    + validarCPF(String): boolean
+}
+
+class Funcionario {
+    - nome: String
+    - cpf: String
+    - salario: double
+    - matricula: int
+    - dep: Departamento
+
+    + Funcionario(nome: String, cpf: String, salario: double, matricula: int, dep: Departamento)
+    + getNome(): String
+    + getCPF(): String
+    + getMatricula(): int
+    + showSalario(): double
+    + getDep(): Departamento
+}
+
+class Departamento {
+    - nome: String
+    - funcionarios: ArrayList<Funcionario>
+
+    + Departamento(nome: String)
+    + inicializarDepartamentos(): void
+    + getNome(): String
+    + incrementFolha(salario: double): void
+    + getFolhaSalarial(): double
+    + addFuncionario(funcionario: Funcionario): void
+    + removeFuncionario(matricula: int): void
+}
+
+Main --> Funcionario: contém
+Main --> Departamento: contém
+Funcionario --> Departamento: pertence
+
+@enduml
